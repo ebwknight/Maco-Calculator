@@ -33,14 +33,18 @@ try:
         food = nix.search(ingredient[0], results="0:1")
         foodID = food.json()['hits'][0]['_id']
         data = nix.item(id=foodID).json()
-        print(data)
+        #print(data)
         
-        calories = ((data['nf_calories'] / data['nf_serving_weight_grams']) * ingredient[1])
-        fat = ((data['nf_total_fat'] / data['nf_serving_weight_grams']) * ingredient[1])
-        carbs = ((data['nf_total_carbohydrate'] / data['nf_serving_weight_grams']) * ingredient[1])
-        protein = ((data['nf_protein'] / data['nf_serving_weight_grams']) * ingredient[1])
-        
-        meal.append([ingredient[0], round(calories,0), round(fat,0), round(carbs,0), round(protein,0)])
+        if data['nf_serving_weight_grams'] != None:
+            calories = ((data['nf_calories'] / data['nf_serving_weight_grams']) * ingredient[1])
+            fat = ((data['nf_total_fat'] / data['nf_serving_weight_grams']) * ingredient[1])
+            carbs = ((data['nf_total_carbohydrate'] / data['nf_serving_weight_grams']) * ingredient[1])
+            protein = ((data['nf_protein'] / data['nf_serving_weight_grams']) * ingredient[1])
+            meal.append([ingredient[0], round(calories,0), round(fat,0), round(carbs,0), round(protein,0)])
+        else:
+            print("No grams per serving data available for " + data['item_name'])
+            print("Ingredient not appended to sheet")
+                  
         
     totalCals = 0
     totalFats = 0
